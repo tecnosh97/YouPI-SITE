@@ -116,6 +116,43 @@
   .pix-espera { margin-top: 16px; color: var(--fraco); font-size: 13px;
                 line-height: 1.55; }
   .pix-espera.pago { color: var(--ok); }
+
+  /* ── o bloco da entrega (a chave nasce AQUI, na hora do verde) ── */
+  .entregue { margin-top: 22px; background: #0d1f16;
+              border: 1px solid #1d5c3a; border-radius: 14px;
+              padding: 22px; }
+  .entregue-ola { font-size: 16px; font-weight: 700; color: var(--ok); }
+  .entregue-boa { color: var(--texto); font-size: 14px; margin: 6px 0 0; }
+  .entregue-rotulo { margin: 18px 0 6px; color: var(--fraco);
+                     font-size: 12px; font-weight: 700; letter-spacing: .08em; }
+  .entregue-produto { color: var(--texto); font-weight: 600; }
+  .entregue-cod { display: flex; align-items: center; gap: 8px;
+                  margin-top: 10px; }
+  .entregue-cod .rot { width: 72px; flex: none; color: var(--fraco);
+                       font-size: 13px; }
+  .entregue-cod code { flex: 1; min-width: 0; background: #07130d;
+                       border: 1px solid #1d5c3a; border-radius: 8px;
+                       padding: 9px 10px; color: var(--ok);
+                       font-size: 12px; word-break: break-all; }
+  .entregue-copiar { flex: none; background: #123524; color: var(--ok);
+                     border: 1px solid #1d5c3a; border-radius: 8px;
+                     padding: 7px 12px; font-size: 12px; font-weight: 600;
+                     cursor: pointer; }
+  .entregue-copiar:hover { background: #175234; }
+  .entregue-passos { margin: 6px 0 0; padding-left: 20px; color: var(--fraco);
+                     font-size: 14px; line-height: 1.65; }
+  .entregue-passos li { margin: 8px 0; }
+  .entregue-passos b, .entregue-passos code { color: var(--texto); }
+  .entregue-passos a { color: var(--ok); }
+  .entregue-painel { display: inline-block; margin-top: 10px;
+                     background: #123524; color: var(--ok);
+                     border: 1px solid #1d5c3a; border-radius: 10px;
+                     padding: 10px 16px; font-size: 13px; font-weight: 700;
+                     text-decoration: none; }
+  .entregue-painel:hover { background: #175234; }
+  .entregue-nota { margin: 14px 0 0; color: var(--fraco); font-size: 13px;
+                   line-height: 1.55; }
+  .entregue-nota b { color: var(--texto); }
 </style>
 </head>
 <body>
@@ -157,9 +194,61 @@
     <a id="pixlink" class="pix-link" href="#" target="_blank"
        rel="noopener">Abrir no Mercado Pago</a>
     <div class="pix-espera" id="pixespera">
-      Aguardando o pagamento… assim que cair, a sua chave é enviada
-      para <b id="pixemail"></b>.
+      Aguardando o pagamento… assim que cair, os <b style="color:var(--texto)">
+      dois códigos</b> aparecem aqui embaixo.
     </div>
+  </div>
+
+  <!-- ══════════ A ENTREGA AUTOMÁTICA ══════════
+       Quando o pagamento cai, o webhook gera a chave e o manifesto sobe
+       para o GitHub. A loja pergunta o /pedido/{id}/chave e recebe os
+       dois códigos — o comprador NUNCA depende de vendedor acordado:
+       a loja entrega sozinha, na hora, dia ou noite. -->
+  <div id="entregue" class="entregue" hidden>
+    <div class="entregue-ola">Olá, <b id="ent_email"></b>!</div>
+    <div class="entregue-boa">Seu pagamento foi confirmado e o seu acesso
+      está liberado.</div>
+
+    <div class="entregue-rotulo">O QUE VOCÊ COMPROU</div>
+    <div class="entregue-produto">YouPI-PG-Live — conteúdo extra da live
+      (licença mensal)</div>
+
+    <div class="entregue-cod">
+      <span class="rot">licença</span>
+      <code id="ent_codigo"></code>
+      <button id="ent_copiar1" class="entregue-copiar" type="button">Copiar</button>
+    </div>
+    <div class="entregue-cod">
+      <span class="rot">ativação</span>
+      <code id="ent_ativacao"></code>
+      <button id="ent_copiar2" class="entregue-copiar" type="button">Copiar</button>
+    </div>
+
+    <div class="entregue-rotulo">COMO ABRIR O JOGO</div>
+    <ol class="entregue-passos">
+      <li>Baixe o programa:
+        <a href="https://github.com/tecnosh97/YouPI-PG-Live"
+           target="_blank" rel="noopener">github.com/tecnosh97/YouPI-PG-Live</a>
+        — botão verde <b>Code</b>, depois <b>Download ZIP</b>.</li>
+      <li>Descompacte a pasta <b>INTEIRA</b> (botão direito no .zip →
+        Extrair tudo) e deixe parada num lugar fixo do computador
+        (Documentos, Área de trabalho…).</li>
+      <li>Abra o <code>1-INSTALACAO.bat</code> de dentro dela e espere
+        terminar (é rápido).</li>
+      <li>Abra o <code>2-COMECAR-LIVE-TIKTOK.bat</code>. No painel que
+        abrir, cole os <b>dois códigos</b> na seção <b>Licença</b> e clique
+        <b>Liberar</b>. Ou clique neste botão — ele já leva os códigos
+        preenchidos:
+        <a id="ent_painel" class="entregue-painel" href="#"
+           target="_blank" rel="noopener">Abrir o painel com os códigos</a></li>
+    </ol>
+    <p class="entregue-nota">Se o Windows abrir um bloco de notas cheio de
+      texto em vez de rodar o .bat, clique com o <b>BOTÃO DIREITO</b> no
+      arquivo, escolha <b>Abrir com</b> e depois
+      <b>Processador de Comandos do Windows</b>.</p>
+    <p class="entregue-nota"><b>Guarde esta página</b> — ela é o seu
+      comprovante. (Aperte Ctrl+P e salve em PDF, se quiser.) A compra
+      também fica registrada no e-mail <b id="ent_email2"></b>.</p>
   </div>
 
   <div class="nota">
@@ -195,7 +284,25 @@
   var pixcopiar = document.getElementById('pixcopiar');
   var pixlink = document.getElementById('pixlink');
   var pixespera = document.getElementById('pixespera');
-  var pixemail = document.getElementById('pixemail');
+
+  var entregue = document.getElementById('entregue');
+  var ent_email = document.getElementById('ent_email');
+  var ent_email2 = document.getElementById('ent_email2');
+  var ent_codigo = document.getElementById('ent_codigo');
+  var ent_ativacao = document.getElementById('ent_ativacao');
+  var ent_painel = document.getElementById('ent_painel');
+
+  // O pedido vive no navegador do comprador: e o comprovante dele. Com
+  // ele, a loja mostra os codigos de novo em qualquer visita posterior,
+  // mesmo depois de fechar a pagina. (48 bits aleatorios — sem ele,
+  // ninguem le chave de ninguem.)
+  function guardarPedido(pedido) {
+    try { localStorage.setItem('youpi-pedido', pedido); } catch (e) {}
+  }
+  function pedidoGuardado() {
+    try { return localStorage.getItem('youpi-pedido') || ''; }
+    catch (e) { return ''; }
+  }
 
   //[[ ONDE A LOJA ESTA AGORA
   //
@@ -244,9 +351,9 @@
       .then(function (d) {
         if (d && d.pago) {
           pixespera.className = 'pix-espera pago';
-          pixespera.textContent = 'Pagamento confirmado! A sua chave vai ' +
-            'para ' + (pixemail.textContent || 'o seu e-mail') + '.';
-          aviso('Pagamento confirmado. Agora é so esperar a chave.', 'ok');
+          pixespera.textContent =
+            'Pagamento confirmado! Pegando os seus códigos…';
+          buscarChaves(pedido, 40);
           return;
         }
         setTimeout(function () { esperar(pedido, tentativas - 1); }, 5000);
@@ -255,6 +362,76 @@
         setTimeout(function () { esperar(pedido, tentativas - 1); }, 8000);
       });
   }
+
+  // O pagamento caiu. A chave nessa hora pode demorar alguns segundos
+  // (gera, assina o manifesto e publica) — pergunta a cada 6s, com
+  // paciencia, ate o bloco verde acender.
+  function buscarChaves(pedido, tentativas) {
+    if (tentativas <= 0) {
+      pixespera.className = 'pix-espera pago';
+      pixespera.textContent = 'Pagamento confirmado. Recarregue esta página ' +
+        'em um minuto para ver os seus códigos.';
+      return;
+    }
+    fetch(LOJA + '/pedido/' + encodeURIComponent(pedido) + '/chave')
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d && d.pago && d.codigo) { mostrarEntrega(d); return; }
+        setTimeout(function () { buscarChaves(pedido, tentativas - 1); },
+                   6000);
+      })
+      .catch(function () {
+        setTimeout(function () { buscarChaves(pedido, tentativas - 1); },
+                   8000);
+      });
+  }
+
+  function mostrarEntrega(d) {
+    var fim = String(d.email || '');
+    ent_email.textContent = fim;
+    ent_email2.textContent = fim || 'sua conta';
+    ent_codigo.textContent = String(d.codigo || '');
+    ent_ativacao.textContent = String(d.ativacao || '');
+    ent_painel.href = 'http://localhost:8000/painel?chave=' +
+      encodeURIComponent(d.codigo || '') +
+      '&ativacao=' + encodeURIComponent(d.ativacao || '');
+    entregue.hidden = false;
+    entregue.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function copiar(botao, fonte) {
+    botao.addEventListener('click', function () {
+      var c = fonte.textContent || '';
+      if (!c) { return; }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(c).then(function () {
+          botao.textContent = 'Copiado!';
+        });
+      } else {
+        var faixa = document.createRange();
+        faixa.selectNodeContents(fonte);
+        var sel = window.getSelection();
+        sel.removeAllRanges(); sel.addRange(faixa);
+        document.execCommand('copy');
+        botao.textContent = 'Copiado!';
+      }
+    });
+  }
+  copiar(document.getElementById('ent_copiar1'), ent_codigo);
+  copiar(document.getElementById('ent_copiar2'), ent_ativacao);
+
+  // Comprador de antes que voltou: se os codigos dele ja existem,
+  // acende o bloco verde de novo — a loja guarda o comprovante dele.
+  (function () {
+    var guardado = pedidoGuardado();
+    if (!guardado) { return; }
+    fetch(LOJA + '/pedido/' + encodeURIComponent(guardado) + '/chave')
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (d && d.pago && d.codigo) { mostrarEntrega(d); }
+      })
+      .catch(function () {});
+  })();
 
   pixcopiar.addEventListener('click', function () {
     var c = pixcodigo.value || '';
@@ -297,7 +474,6 @@
         // (o provedor pode mudar o formato), o cliente vai para a pagina
         // do provedor — que tambem funciona.
         if (res.d.qr_base64 || res.d.qr_code) {
-          pixemail.textContent = end;
           if (res.d.qr_base64) {
             pixqr.src = 'data:image/png;base64,' + res.d.qr_base64;
             pixqr.hidden = false;
@@ -309,6 +485,7 @@
           pixbox.hidden = false;
           aviso('Pagamento criado. Escaneie o codigo abaixo.', 'ok');
           pixbox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          guardarPedido(res.d.order_id);
           esperar(res.d.order_id, 90);
           return;
         }
